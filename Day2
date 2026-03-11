@@ -1,0 +1,130 @@
+1️⃣ @RequestMapping
+
+@RequestMapping anedi base URL set cheyadaniki use chestam.
+Example:
+
+@RestController
+@RequestMapping("/student")
+public class StudentController {
+
+}
+
+Meaning:
+
+/student → base URL
+
+So inside methods:
+
+/student/all
+/student/name
+/student/id
+
+@RequestMapping can be used at both class level and method level.
+Class level → base URL
+Method level → specific endpoint mapping
+
+2️⃣ @GetMapping
+
+GET request ante data fetch cheyadaniki.
+
+Example:
+
+@GetMapping("/hello")
+public String hello() {
+    return "Hello Spring Boot";
+}
+
+Browser lo call:
+
+http://localhost:8080/hello
+🟢 Example – Student Controller
+
+Create new controller:
+
+com.prince.firstApp.controller
+
+Class name:
+
+StudentController
+
+Code:
+
+package com.prince.firstApp.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@RestController
+@RequestMapping("/student")
+public class StudentController {
+
+    @GetMapping("/name")
+    public String studentName() {
+        return "Student name is Hemanth";
+    }
+
+    @GetMapping("/course")
+    public String studentCourse() {
+        return "Student is learning Spring Boot";
+    }
+
+}
+🧪 Browser Testing
+
+Try these:
+
+http://localhost:8080/student/name
+http://localhost:8080/student/course
+
+3️⃣ @PathVariable (Very Important)
+
+URL lo value pass cheyadaniki use chestam.
+
+Example URL:
+
+/student/101
+
+Code:
+
+@GetMapping("/{id}")
+public String getStudent(@PathVariable int id) {
+    return "Student ID is " + id;
+}
+
+Browser:
+
+http://localhost:8080/student/101
+
+Output:
+
+Student ID is 101
+
+
+4️⃣ @RequestParam
+
+Query parameter ni read cheyadaniki.
+
+Example URL:
+
+/student/info?name=Hemanth
+
+Code:
+
+@GetMapping("/info")
+public String studentInfo(@RequestParam String name) {
+    return "Student name is " + name;
+}
+
+Browser:
+
+http://localhost:8080/student/info?name=Hemanth
+
+Output:
+
+Student name is Hemanth
+
+
+5️⃣ @PostMapping
+
+POST request data send cheyadaniki.
