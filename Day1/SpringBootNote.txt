@@ -1,0 +1,74 @@
+1️⃣ Spring ante enti?
+
+Spring anedi Java Framework.
+
+Framework ante:
+
+👉 Ready-made tools + libraries
+👉 Developer ki easy ga application build cheyadaniki help chestundi.
+
+
+Without Spring
+
+public class Car {
+
+    Engine engine = new Engine();
+
+}
+
+Developer anni objects create cheyyali.
+
+But Spring use chesthe
+
+@Autowired
+Engine engine;
+
+Spring automatically object create chestundi.
+👉 Dinine Dependency Injection antaru
+
+2️⃣ Spring enduku vachindi?
+
+Old Java applications lo problems:
+
+❌ Too much boilerplate code
+❌ Object creation manual
+❌ Configuration difficult
+❌ Testing hard
+
+So Spring framework vachindi.
+
+Advantages:
+
+✔ Loose coupling
+✔ Dependency Injection
+✔ Easy testing
+✔ Modular architecture
+
+7️⃣ Production Ready Features
+
+Spring Boot lo built-in tools untayi.
+
+Example:
+
+Health check
+
+Metrics
+
+Logging
+
+Monitoring
+
+Use Spring Boot Actuator
+Example URL:
+
+/actuator/health
+
+Output:
+
+{
+ "status": "UP"
+}
+
+Production lo system healthy unda leda check cheyyachu.
+
+
