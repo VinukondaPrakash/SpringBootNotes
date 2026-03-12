@@ -1,0 +1,334 @@
+Day 7:
+Today topics:
+
+⭐ Entity
+⭐ ORM concept
+⭐ Spring Data JPA
+⭐ MySQL connection
+⭐ @Entity, @Id, @GeneratedValue
+⭐ JpaRepository
+
+🟢 1️⃣ ORM Concept
+
+ORM = Object Relational Mapping
+
+Meaning:
+
+Java Object ↔ Database Table
+Example:
+
+Java class:
+
+Student
+
+Database table:
+
+student
+
+Mapping:
+
+Java	Database
+class	table
+object	row
+field	column
+
+Example:
+
+Java object:
+
+new Student(1,"Hemanth","Spring")
+
+Database row:
+
+id | name    | course
+1  | Hemanth | Spring
+
+
+Hemanth 👏 very good observation. Idi **real backend understanding start ayye point**. Nee doubt chala valid. Ippudu clear ga explain chestha.
+
+---
+
+# 1️⃣ First stage (DB lekunda chesinappudu)
+
+Earlier manam APIs chesam:
+
+```
+GET /hello
+POST /student/add
+```
+
+Example controller:
+
+```java
+@PostMapping("/add")
+public Student addStudent(@RequestBody Student s){
+    return s;
+}
+```
+
+Ikkada **database ledu**.
+
+Flow:
+
+```
+Postman
+   ↓
+Controller
+   ↓
+Response return
+```
+
+Spring Boot **JSON → Object → JSON** conversion chestundi.
+
+Spring Boot automatically **Jackson library** use chestundi.
+
+Kabatti nuvvu Postman lo:
+
+```
+Body → raw → JSON
+```
+
+select chesinappudu Postman automatically header add chestundi:
+
+```
+Content-Type: application/json
+```
+
+Kabatti manam manual ga add cheyyalsina avasaram ledu.
+
+---
+
+# 2️⃣ Ippudu DB add chesinappudu
+
+Flow ippudu ila undi:
+
+```
+Postman
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Hibernate
+   ↓
+MySQL
+```
+
+Ikkada Spring Boot **JSON body ni parse cheyyali**.
+
+So server ki teliyali:
+
+```
+Request body format enti?
+```
+
+Example:
+
+| Format    | Header                            |
+| --------- | --------------------------------- |
+| JSON      | application/json                  |
+| Form data | application/x-www-form-urlencoded |
+| File      | multipart/form-data               |
+
+So server ki teliyali **JSON vastundi ani**.
+
+---
+
+# 3️⃣ Content-Type header role
+
+Example request:
+
+```
+POST /student/add
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+"name":"Hemanth",
+"course":"Spring Boot"
+}
+```
+
+Spring Boot chustundi:
+
+```
+Content-Type = application/json
+```
+
+So Jackson use chesi:
+
+```
+JSON → Student object
+```
+
+convert chestundi.
+
+---
+
+# 4️⃣ Header lekapothe em jarugutundi?
+
+Server confuse avutundi.
+
+```
+Body lo data undi
+But format teliyadu
+```
+
+So error vastundi:
+
+```
+400 Bad Request
+JSON parse error
+```
+
+---
+
+# 5️⃣ Why earlier automatic ga work ayyindi?
+
+Postman **auto header add chesindi**.
+
+When you select:
+
+```
+Body → raw → JSON
+```
+
+Postman internally add chestundi:
+
+```
+Content-Type: application/json
+```
+
+But konni sari:
+
+```
+Body type change ayina
+or manual editing
+```
+
+appudu header remove avvachu.
+
+Kabatti manam manually add chesam.
+
+---
+
+# 6️⃣ Quick example
+
+### Wrong request
+
+```
+POST /student/add
+(no header)
+```
+
+Body:
+
+```
+{name:"Hemanth"}
+```
+
+Server:
+
+```
+Format teliyadu ❌
+```
+
+---
+
+### Correct request
+
+```
+POST /student/add
+Content-Type: application/json
+```
+
+Body:
+
+```json
+{
+"name":"Hemanth",
+"course":"Spring Boot"
+}
+```
+
+Server:
+
+```
+JSON parse
+Object create
+DB insert
+```
+
+---
+
+# 7️⃣ Postman tabs explanation (short)
+
+Response area lo nuvvu chusav:
+
+| Tab          | Meaning            |
+| ------------ | ------------------ |
+| Pretty       | formatted response |
+| Raw          | plain response     |
+| Preview      | browser style      |
+| Headers      | response headers   |
+| Cookies      | cookies            |
+| Test Results | scripts            |
+
+---
+
+# 8️⃣ Small developer tip
+
+Spring Boot lo almost **every POST / PUT API** use chestundi:
+
+```
+Content-Type: application/json
+```
+
+Industry standard.
+
+---
+
+# 9️⃣ One more interesting thing
+
+Nuvvu controller lo ila rayachu:
+
+```java
+@PostMapping(value="/add", consumes="application/json")
+```
+
+Meaning:
+
+```
+Only JSON accept chestha
+```
+
+---
+
+# 🔟 Important learning
+
+Spring Boot automatically handle chestundi:
+
+```
+JSON ↔ Java Object
+```
+
+using:
+
+```
+Jackson
+```
+
+---
+
+# Next doubt cheppu
+
+Nuvvu annav **2 doubts unnayi**.
+
+Idi **1st doubt clear ayyindi**.
+
+👉 **2nd doubt enti Hemanth?**
