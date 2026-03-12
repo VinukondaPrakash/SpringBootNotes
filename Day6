@@ -1,0 +1,50 @@
+DAY 6:
+
+🧠 Request Flow Now
+GET /student/all
+       ↓
+StudentController
+       ↓
+StudentService
+       ↓
+List<Student>
+       ↓
+JSON Array
+
+
+🧪 Test Again
+GET
+http://localhost:8080/student/all
+
+Response same untundi:
+
+[
+ {
+  "id":1,
+  "name":"Hemanth",
+  "course":"Spring"
+ },
+ {
+  "id":2,
+  "name":"Ravi",
+  "course":"Java"
+ },
+ {
+  "id":3,
+  "name":"Priya",
+  "course":"Python"
+ }
+]
+
+🧠 Interview Question
+
+Why use Service layer in Spring Boot?
+
+Answer:
+
+To separate business logic from controller.
+Controller handles request.
+Service contains business logic.
+
+
+
