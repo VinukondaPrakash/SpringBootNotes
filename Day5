@@ -1,0 +1,3 @@
+if method return List<Studnet>    ------  response JSON ARRAY
+if method return Studnet    ------  response JSON 
+if method return String    ------  plaintext/String
