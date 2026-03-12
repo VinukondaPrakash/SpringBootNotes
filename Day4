@@ -170,7 +170,6 @@ This process = Deserialization
 🟢 3️⃣ Method Execution
 
 Method run ayindi:
-
 return s;
 
 Meaning:
