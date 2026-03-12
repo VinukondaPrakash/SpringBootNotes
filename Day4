@@ -287,3 +287,132 @@ Nuvvu adigina question beginner level kaadu.
 Idi usually 3-4 weeks tarvatha ardham ayye concept.
 
 So learning correct direction lo vundi
+Correct Hemanth 👍 almost correct, but small clarity add chestha so concept perfect ga settle avuthundi.
+
+Nee method:
+
+public String hello(){
+    return "Hello";
+}
+
+If this method @RestController lo unte, response:
+
+Hello
+
+plain String text ga vastundi.
+
+🟢 Why JSON kaadu?
+
+Spring Boot rule simple:
+
+Return Type	Response Format
+String	Plain text
+Object	JSON
+List<Object>	JSON Array
+🧪 Example 1 – String
+@GetMapping("/hello")
+public String hello(){
+    return "Hello";
+}
+
+Response:
+
+Hello
+
+Not JSON.
+
+🧪 Example 2 – Object
+@GetMapping("/student")
+public Student getStudent(){
+    return new Student(1,"Hemanth","Spring");
+}
+
+Response:
+
+{
+"id":1,
+"name":"Hemanth",
+"course":"Spring"
+}
+🧪 Example 3 – List
+@GetMapping("/students")
+public List<Student> getStudents(){
+    return List.of(
+        new Student(1,"Hemanth","Spring"),
+        new Student(2,"Ravi","Java")
+    );
+}
+
+Response:
+
+[
+ {
+  "id":1,
+  "name":"Hemanth",
+  "course":"Spring"
+ },
+ {
+  "id":2,
+  "name":"Ravi",
+  "course":"Java"
+ }
+]
+🧠 Why JSON object vachindi earlier?
+
+Because method return type:
+
+Student
+
+Spring Boot internally:
+
+Student object → JSON
+
+convert chesindi using Jackson.
+
+🟢 One more interesting thing
+
+If nuvvu ila return chesthe:
+
+@GetMapping("/test")
+public Map<String,String> test(){
+    Map<String,String> map = new HashMap<>();
+    map.put("name","Hemanth");
+    map.put("course","Spring");
+    return map;
+}
+
+Response:
+
+{
+"name":"Hemanth",
+"course":"Spring"
+}
+⭐ Important REST API Rule
+
+In backend:
+
+Object → JSON
+List → JSON Array
+String → Plain Text
+🔥 Next Step (Day 5 – Very Important)
+
+Ippudu manam realistic API build cheddam.
+
+Example:
+
+GET /students
+
+Response:
+
+[
+ {
+  "id":1,
+  "name":"Hemanth",
+  "course":"Spring"
+ },
+ {
+  "id":2,
+  "name":"Ravi",
+  "course":"Java"
+ }
+]
