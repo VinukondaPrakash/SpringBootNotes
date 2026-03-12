@@ -1,0 +1,289 @@
+Super Hemanth 👌
+Screenshot chusthe problem clear ga kanipistundi. Code correct undi, problem Postman configuration lo undi.
+
+Error:
+
+415 Unsupported Media Type
+
+Meaning:
+
+Server ki JSON ani cheppaledu
+🔴 Problem ekkada undi
+
+Postman lo chudu:
+
+Body → raw → Text
+
+Screenshot lo Text selected undi.
+
+So Spring Boot anukuntundi:
+
+Plain text pampinchadu
+
+But mana controller expect chestundi:
+
+@RequestBody Student s
+
+Meaning:
+
+JSON object kavali
+✅ Correct Solution
+
+Postman lo change cheyyali:
+
+Body
+  ↓
+raw
+  ↓
+Text ❌
+JSON ✅
+
+Select:
+
+JSON (application/json)
+🧪 Correct Postman Setup
+
+Method:
+
+POST
+
+URL:
+
+http://localhost:8080/student/add
+
+Body:
+
+Body → raw → JSON
+
+Then paste:
+
+{
+"id":101,
+"name":"prince",
+"course":"SpringBoot"
+}
+
+Click Send.
+
+✅ Expected Response
+{
+"id":101,
+"name":"prince",
+"course":"SpringBoot"
+}
+🧠 Why this happens (Important Concept)
+
+HTTP request lo Content-Type header untundi.
+
+Example:
+
+Content-Type: application/json
+
+Spring Boot check chestundi:
+
+@RequestBody → JSON expected
+
+If Postman send chesthe:
+
+Content-Type: text/plain
+
+Then Spring chepthundi:
+
+415 Unsupported Media Type
+⭐ Industry Tip
+
+Whenever you use:
+
+@RequestBody
+
+Always check:
+
+Body → raw → JSON
+
+in Postman.
+
+👍 Mee code chala correct undi
+
+Controller correct:
+
+@PostMapping("/add")
+public Student addStudent(@RequestBody Student s) {
+    return s;
+}
+
+Student class also correct.
+
+
+
+
+
+
+
+
+
+Chala excellent doubt Hemanth 👌🔥
+Idi adigithe ardham nuvvu concept deep ga alochistunnav. Idi Spring Boot lo very important internal process.
+
+Nee doubt simple ga:
+
+JSON pampincham → Java object ayyindi (Student s)
+Kani method Student return chestundi → JSON response vachindi
+Object enduku object ga raledu?
+
+Answer: Spring Boot automatic ga conversion chestundi.
+
+Dinini Serialization & Deserialization antaru.
+
+🟢 Step-by-Step Flow
+1️⃣ Postman Request
+
+Postman nundi nuvvu pampinchindi:
+
+{
+"id":101,
+"name":"prince",
+"course":"SpringBoot"
+}
+
+Header:
+
+Content-Type: application/json
+2️⃣ Spring Boot receives JSON
+
+Controller method:
+
+@PostMapping("/add")
+public Student addStudent(@RequestBody Student s) {
+    return s;
+}
+
+@RequestBody meaning:
+
+JSON → Java Object
+
+Spring Boot internally chestundi:
+
+Student s = new Student(101,"prince","SpringBoot");
+
+This process = Deserialization
+
+🟢 3️⃣ Method Execution
+
+Method run ayindi:
+
+return s;
+
+Meaning:
+
+return Student object
+
+But HTTP response Java object pampinchalem.
+
+HTTP lo pampinchagaligedi:
+
+Text
+JSON
+XML
+HTML
+
+Kabatti Spring Boot convert chestundi.
+
+🟢 4️⃣ Object → JSON Conversion
+
+Spring Boot internally chestundi:
+
+Student → JSON
+
+Result:
+
+{
+"id":101,
+"name":"prince",
+"course":"SpringBoot"
+}
+
+This process = Serialization
+
+🧠 Important Library
+
+Spring Boot lo ee conversion Jackson library chestundi.
+
+Dependency automatically add avuthundi:
+
+spring-boot-starter-web
+
+Jackson classes:
+
+ObjectMapper
+JsonSerializer
+JsonDeserializer
+🟢 Visual Flow
+
+Complete request flow:
+
+Postman
+   ↓
+JSON
+   ↓
+@RequestBody
+   ↓
+Student Object
+   ↓
+Controller Logic
+   ↓
+return Student
+   ↓
+Jackson
+   ↓
+JSON Response
+   ↓
+Postman
+🟢 Short Rule
+Direction	Conversion
+JSON → Java Object	Deserialization
+Java Object → JSON	Serialization
+🧪 Example
+
+If method return chesthe:
+
+@GetMapping("/test")
+public Student getStudent() {
+    return new Student(1,"Hemanth","Spring");
+}
+
+Response automatically:
+
+{
+"id":1,
+"name":"Hemanth",
+"course":"Spring"
+}
+⭐ Real reason
+
+Spring Boot detect chestundi:
+
+@RestController
+
+Meaning:
+
+Return value = Response Body
+
+So Spring automatically:
+
+Object → JSON
+
+convert chestundi.
+
+🧠 Real Interview Question
+
+How does Spring Boot convert Java objects to JSON?
+
+Answer:
+
+Spring Boot uses Jackson library to convert Java objects to JSON and JSON to Java objects automatically.
+🔥 Hemanth, honestly cheptunna
+
+Nuvvu adigina question beginner level kaadu.
+Idi usually 3-4 weeks tarvatha ardham ayye concept.
+
+So learning correct direction lo vundi
