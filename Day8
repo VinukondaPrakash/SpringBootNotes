@@ -1,0 +1,489 @@
+Perfect Hemanth 👍 correct decision. **Spring Boot strong ayyaka microservices easy ga ardham avutayi**. So ippudu **Day-8 ki move avudam**.
+
+Ippativaraku manam achieve chesindi:
+
+✔ Spring Boot project create
+✔ Controller
+✔ JSON Request / Response
+✔ Service layer
+✔ Repository
+✔ MySQL connection
+✔ POST API (insert data)
+
+So ippudu **CRUD APIs complete cheddam**.
+
+---
+
+# 🟢 Day 8 – Remaining CRUD APIs
+
+Manam implement cheyyaboye APIs:
+
+```
+GET     /student/all
+GET     /student/{id}
+DELETE  /student/{id}
+PUT     /student/update
+```
+
+---
+
+# 1️⃣ GET All Students
+
+### Service
+
+```java
+public List<Student> getAllStudents(){
+    return repo.findAll();
+}
+```
+
+### Controller
+
+```java
+@GetMapping("/all")
+public List<Student> getAllStudents(){
+    return ss.getAllStudents();
+}
+```
+
+---
+
+### Test
+
+Postman:
+
+```
+GET http://localhost:8080/student/all
+```
+
+Response:
+
+```json
+[
+ {
+  "id":1,
+  "name":"Hemanth",
+  "course":"Spring Boot"
+ }
+]
+```
+
+---
+
+# 2️⃣ GET Student By ID
+
+### Service
+
+```java
+public Student getStudentById(Integer id){
+    return repo.findById(id).orElse(null);
+}
+```
+
+### Controller
+
+```java
+@GetMapping("/{id}")
+public Student getStudent(@PathVariable Integer id){
+    return ss.getStudentById(id);
+}
+```
+
+---
+
+### Test
+
+```
+GET http://localhost:8080/student/1
+```
+
+Response:
+
+```json
+{
+"id":1,
+"name":"Hemanth",
+"course":"Spring Boot"
+}
+```
+
+---
+
+# 3️⃣ DELETE Student
+
+### Service
+
+```java
+public String deleteStudent(Integer id){
+    repo.deleteById(id);
+    return "Student Deleted";
+}
+```
+
+### Controller
+
+```java
+@DeleteMapping("/{id}")
+public String deleteStudent(@PathVariable Integer id){
+    return ss.deleteStudent(id);
+}
+```
+
+---
+
+### Test
+
+```
+DELETE http://localhost:8080/student/1
+```
+
+Response:
+
+```
+Student Deleted
+```
+
+---
+
+# 4️⃣ UPDATE Student
+
+### Service
+
+```java
+public Student updateStudent(Student s){
+    return repo.save(s);
+}
+```
+
+### Controller
+
+```java
+@PutMapping("/update")
+public Student updateStudent(@RequestBody Student s){
+    return ss.updateStudent(s);
+}
+```
+
+---
+
+### Test
+
+```
+PUT http://localhost:8080/student/update
+```
+
+Body:
+
+```json
+{
+"id":1,
+"name":"Hemanth Kumar",
+"course":"Spring Boot Advanced"
+}
+```
+
+---
+
+# 🧠 Important concept
+
+`repo.save()` behave ila untundi:
+
+| Condition      | Operation |
+| -------------- | --------- |
+| id not present | INSERT    |
+| id present     | UPDATE    |
+
+So **same method both operations** handle chestundi.
+
+---
+
+# 🟢 Architecture recap
+
+```
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Hibernate
+   ↓
+MySQL
+```
+
+---
+
+# 🎯 After Day-8
+
+Nee Spring Boot knowledge already **intermediate level** ki vellipothundi.
+
+Next manam nerchukune topics:
+
+```
+DTO Pattern
+Exception Handling
+Validation
+Lombok
+Pagination
+```
+
+These are **real project concepts**.
+
+---
+
+Before Day-9 start cheyyadaniki small task:
+
+Implement these APIs and test in Postman:
+
+```
+GET /student/all
+GET /student/{id}
+DELETE /student/{id}
+PUT /student/update
+```
+
+---
+
+Hemanth, oka quick check:
+
+Nuvvu ippudu **Controller → Service → Repository structure create chesava?**
+Leda inka **Controller nundi direct repo call chestunnava?**
+
+
+
+Hemanth 👍 good progress. Nee questions lo **2 different issues** unnayi. Okokati clear ga explain chestha.
+
+---
+
+# 1️⃣ JSON fields order enduku change ayyindi?
+
+Nuvvu expected:
+
+```json
+{
+"id":1,
+"name":"Hemanth",
+"course":"Spring Boot"
+}
+```
+
+But response vachindi:
+
+```json
+{
+"course":"Spring Boot",
+"id":1,
+"name":"Hemanth"
+}
+```
+
+### Reason
+
+JSON lo **order important kaadu**.
+
+Technically JSON object:
+
+```
+key → value pairs
+```
+
+Example:
+
+```json
+{
+"a":1,
+"b":2
+}
+```
+
+and
+
+```json
+{
+"b":2,
+"a":1
+}
+```
+
+Both **same JSON**.
+
+Jackson (Spring Boot JSON converter) sometimes **alphabetical order** lo serialize chestundi.
+
+So:
+
+```
+course
+id
+name
+```
+
+order lo vachindi.
+
+### If order maintain cheyyali ante
+
+Entity lo annotation use cheyyachu:
+
+```java
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"id","name","course"})
+@Entity
+public class Student {
+```
+
+But **normally production lo order important kaadu**.
+
+---
+
+# 2️⃣ PUT API error (main issue)
+
+Nee error:
+
+```
+ObjectOptimisticLockingFailureException
+Row was already updated or deleted
+```
+
+This happens because **update logic wrong ga undi**.
+
+Probably nuvvu service lo direct ga ila chesav:
+
+```java
+public Student updateById(Student s){
+    return repo.save(s);
+}
+```
+
+But Hibernate ki clarity undadu **record exist avuthunda leda**.
+
+---
+
+## Correct Update Logic
+
+Update mundu **record exist avuthunda check cheyyali**.
+
+### Service
+
+```java
+public Student updateById(Integer id, Student s){
+
+    Student existing = repo.findById(id).orElse(null);
+
+    if(existing != null){
+        existing.setName(s.getName());
+        existing.setCourse(s.getCourse());
+        return repo.save(existing);
+    }
+
+    return null;
+}
+```
+
+---
+
+### Controller
+
+```java
+@PutMapping("/{id}")
+public Student updateById(@PathVariable Integer id,
+                          @RequestBody Student s){
+    return ss.updateById(id,s);
+}
+```
+
+---
+
+### Postman PUT request
+
+```
+PUT
+http://localhost:8080/student/1
+```
+
+Body:
+
+```json
+{
+"name":"Hemanth Kumar",
+"course":"Spring Boot Advanced"
+}
+```
+
+Then response:
+
+```json
+{
+"id":1,
+"name":"Hemanth Kumar",
+"course":"Spring Boot Advanced"
+}
+```
+
+---
+
+# 3️⃣ Important concept (Interview point)
+
+Hibernate `save()` behave like:
+
+| Condition                 | Operation |
+| ------------------------- | --------- |
+| id null                   | INSERT    |
+| id exists in DB           | UPDATE    |
+| id exists but row missing | Exception |
+
+Nee case lo **3rd case jarigindi**.
+
+---
+
+# 4️⃣ Nee project status
+
+Currently working:
+
+✔ POST
+✔ GET ALL
+✔ GET BY ID
+✔ DELETE
+
+Only **PUT logic fix cheyyali**.
+
+---
+
+# Next Step (very important for interviews)
+
+Next manam nerchukundam:
+
+### Spring Boot Exception Handling
+
+Example:
+
+```
+Student not found
+```
+
+Instead of:
+
+```
+500 error
+```
+
+Return:
+
+```
+404 Not Found
+```
+
+Idi **real production practice**.
+
+---
+
+Before next topic start cheyyam:
+
+Ok small question Hemanth.
+
+**DELETE API test chesava?**
+
+```
+DELETE http://localhost:8080/student/1
+```
+
+Work ayyinda?
